@@ -6,6 +6,8 @@ class HoursRule < EarningRule
   has_one :hours_rule_config
   delegate :rank, to: :hours_rule_config
 
+  scope :ordered_by_rank, -> { joins(:hours_rule_config).order('hours_rule_configs.rank DESC') }
+
   ##
   # An hours rule applies to the minimum hours
   # applicable to a test.

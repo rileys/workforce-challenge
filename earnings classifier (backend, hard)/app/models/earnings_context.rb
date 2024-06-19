@@ -5,12 +5,16 @@ class EarningsContext
 
   attr_accessor :applied_hours,
                 :shift,
-                :shift_hours
+                :shift_hours,
+                :timesheet_hours,
+                :applied_timesheet_hours
 
-  def initialize
+  def initialize(timesheet)
     @shift = nil
     @shift_hours = 0
     @applied_hours = 0
+    @timesheet_hours = timesheet.shifts.sum { |shift| (shift.finish - shift.start).to_f / 1.hour }
+    @applied_timesheet_hours = 0
   end
 
   ##
@@ -28,6 +32,7 @@ class EarningsContext
   #
   def apply!(hours)
     self.applied_hours += hours
+    self.applied_timesheet_hours += hours
   end
 
   ##
@@ -42,5 +47,9 @@ class EarningsContext
   #
   def remaining_hours?
     remaining_hours > 0
+  end
+
+  def remaining_timesheet_hours
+    @timesheet_hours - @applied_timesheet_hours
   end
 end

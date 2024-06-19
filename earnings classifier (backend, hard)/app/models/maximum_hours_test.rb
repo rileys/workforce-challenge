@@ -11,7 +11,7 @@ class MaximumHoursTest < EarningTest
   # the threshold for the period has been reached
   #
   def hours(ctx)
-    ctx.shift_hours - threshold
+    applicable_hours(ctx) - threshold
   end
 
   ##
@@ -20,6 +20,16 @@ class MaximumHoursTest < EarningTest
   # to be true
   #
   def addon?(ctx)
-    ctx.shift_hours >= threshold
+    applicable_hours(ctx) >= threshold
+  end
+
+  private
+
+  def applicable_hours(ctx)
+    if period == 'timesheet'
+      ctx.remaining_timesheet_hours
+    else
+      ctx.shift_hours
+    end
   end
 end
